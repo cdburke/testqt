@@ -1,0 +1,38 @@
+name: testqt
+
+on:
+ push:
+  branches:
+   - master
+
+jobs:
+
+# windows arm64 --------------------------------------------------------
+ jqtwinarm64:
+  name: JQtide (Windows arm64)
+  runs-on: windows-11-arm
+  steps:
+   - name: Check Git repository
+     uses: actions/checkout@v4
+     with:
+      submodules: recursive
+
+   - name: Setup Environment (Windows arm64)
+     uses: ilammy/msvc-dev-cmd@v1
+     with:
+      arch: arm64
+
+   - name: Install Qt from source
+     uses: jurplel/install-qt-action@v4
+     with:
+      version: '6.10.1'
+      host: 'windows_arm64'
+      target: 'desktop'
+      arch: 'win64_msvc2022_arm64'
+      dir: '${{github.workspace}}'
+      modules: 'all'
+      aqtversion: '==3.3.*'
+
+   - name: Script
+     shell: cmd
+     run: script\testqt.cmd arm64 6.10.1
